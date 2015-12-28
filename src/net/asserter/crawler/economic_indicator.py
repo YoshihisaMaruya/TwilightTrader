@@ -37,7 +37,7 @@ class YahooFinance:
     def __get(self, url):
         with urllib.request.urlopen(url=url) as page:
             data = self.__parse_page(page)
-            result = dict((date, {'expect:': data["expectAll"].get(date), 'result:': data["resultAll"].get(date)})
+            result = dict((date, {'expect': data["expectAll"].get(date), 'result': data["resultAll"].get(date)})
                  for date in data["expectAll"].keys() if data["resultAll"].get(date) != None)
             Log.info(result)
             return result
@@ -52,7 +52,7 @@ class YahooFinance:
     def cec(self, save=True):
         result = self.get(key1="yahoo", key2="cec", save=save)
         if save:
-            EconomicIndicatorDatabase.create_table("CEC")
+            EconomicIndicatorDatabase.insert(result)
         return result
 
     # CPI
