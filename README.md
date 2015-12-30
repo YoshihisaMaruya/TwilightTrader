@@ -8,11 +8,41 @@ Twilight Traderは、各種金融商品(FX,CFD,現物,信用)の自動売買に�
 	3. 売買発注(signal)
 	4. インターフェース(ui)
 
+##構成
+
+├── README.md
+├── analyze //データ解析 : TODO
+├── collect //データ収集
+│   ├── investing //リアルタイムデータ取得
+│   ├── yahoo_finance //経済指標取得
+│   └── scripts
+│       ├── realtime_demo_alive.sh
+│       ├── realtime_master.sh //リアルタイムデータ取得のmaster(デーモン)
+│       ├── realtime_slave.sh //リアルタイムデータ取得のslave(デーモン)
+│       ├── ecomonic_indicator.sh //経済指標の取得
+│       └── realtime_stop.sh
+├── config
+│   ├── common.ini
+│   ├── investing.json
+│   └── private.ini.sample
+├── db
+│   └── 20151231
+│       ├── eurjpy.csv
+│       ├── eurusd.csv
+│       ├── oil.csv
+│       └── usdjpy.csv
+├── material
+│   ├── TwilightTrader.png
+│   └── UML.asta
+├── signal
+└── ui
+
 #データ収集(collect)
 
 データ収集の機能はcollectにまとまっています。
 経済指標は、Yahoo Financeのhtmlをパーズして取得します。
 リアルタイムレートは、investing.comからWebSocketを用いて取得します。
+TODO : リアルタイムレート取得はmaster/slaveで冗長性を実現します。
 
 ##インストール
 下記のツールに依存しています。適時インストールを行ってください。
