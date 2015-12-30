@@ -1,0 +1,4 @@
+exchange.js is 
+alive.
+commodity.js is 
+alive.

@@ -1,9 +1,9 @@
 var iw = require('./investing_websocket.js');
 var fs = require("fs");
 
-var sqlite3 = require("sqlite3").verbose();
+//var sqlite3 = require("sqlite3").verbose();
 var env = process.env
-var db = new sqlite3.Database(env["TT_HOME"] + "/db/commodity.db");
+//var db = new sqlite3.Database(env["TT_HOME"] + "/db/commodity.db");
 
 // log function
 logger=function(text) {
