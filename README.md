@@ -1,2 +1,7 @@
-http://yoshihisamaruya.github.io/
-Websokect : https://github.com/liris/websocket-client
+[Dependencies]
+<python3>
+PyV8
+<node>
+fs
+sockjs-client
+date-utils
