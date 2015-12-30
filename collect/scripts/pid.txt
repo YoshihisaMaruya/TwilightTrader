@@ -1,4 +1,2 @@
-exchange.js
-5916
-commodity.js
-5917
+investing_websocket.js
+8419

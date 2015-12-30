@@ -113,10 +113,12 @@ new_conn = function() {
  			
  			logger(filename);
  			logger(csv);
+			setHeartbeat();
 		} catch (err) {
 			try{
 				// heartbeat
 				data["_event"];
+				setHeartbeat();
 			}
 			catch(d){
 				//console.log('CATCH ERR ' + err.message + e.data);

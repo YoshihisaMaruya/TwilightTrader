@@ -1,8 +1,4 @@
-node ${TT_HOME}/collect/node/investing/exchange.js &
-echo "exchange.js" > pid.txt
+node ${TT_HOME}/collect/node/investing/investing_websocket.js &
+echo "investing_websocket.js" > pid.txt
 echo $! >> pid.txt
-node ${TT_HOME}/collect/node/investing/commodity.js &
-echo "commodity.js" >> pid.txt
-echo $! >> pid.txt
-echo "master demo is started" 
 cat pid.txt
