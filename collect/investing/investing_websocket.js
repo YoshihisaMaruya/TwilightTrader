@@ -10,14 +10,20 @@ load_config = function(){
 }
 
 // get time
-function getUTCTime(timestamp, timezoneOffset) {
+function getUTCDate(timestamp, timezoneOffset) {
 	var dt = new Date((timestamp + timezoneOffset) * 1000);
 	var formatted = dt.toFormat("YYYYMMDD");
 	return formatted;
 }
 
+function getUTCDatetime(timestamp, timezoneOffset) {
+	var dt = new Date((timestamp + timezoneOffset) * 1000);
+	var formatted = dt.toFormat("YYYYMMDDHH24MISS");
+	return formatted;
+}
+
 // get time
-function getCurrentDate() {
+function getCurrentDatetime() {
 	var dt = new Date();
 	var formatted = dt.toFormat("YYYYMMDDHH24MISS");
 	return formatted;
@@ -40,7 +46,7 @@ function ensureDirectoryExistence(dirname) {
 
 // log function
 logger = function(text) {
-  fs.appendFile(env["TT_HOME"] + "/log/investing.log", getCurrentDate() + ":investing:"+ text + "\n");
+  fs.appendFile(env["TT_HOME"] + "/log/investing.log", getCurrentDatetime() + ":investing:"+ text + "\n");
 }
 
 
@@ -102,9 +108,9 @@ new_conn = function() {
 			var data = JSON.parse(e.data);
 			var result = data.message.split('::');
 			var pid_obj = JSON.parse(result[1]);
-			var date = getUTCTime(pid_obj["timestamp"],32400);
+			var date = getUTCDate(pid_obj["timestamp"],0);
 			
-			csv = pid_obj["timestamp"]+","+pid_obj["bid"]+","+ pid_obj["ask"];
+			csv = pid_obj["timestamp"]+","+pid_obj["bid"]+","+ pid_obj["ask"]+","+getUTCDatetime(pid_obj["timestamp"],0);
 			var dirname = env["TT_HOME"] + "/db/" + date;
 
 			var filename =  dirname + "/" + contents[pid_obj["pid"]]["name"] + ".csv";
