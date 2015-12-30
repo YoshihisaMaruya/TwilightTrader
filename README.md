@@ -3,12 +3,12 @@
 Twilight Traderは、各種金融商品(FX,CFD,現物,信用)の自動売買に必要なプログラム群をまとめたものです。
 提供される機能は以下の4つです。
 
-1. データ収集(collect)
-2. データ解析(analyze)
-3. 売買発注(signal)
-4. インターフェース(ui)
+	1. データ収集(collect)
+	2. データ解析(analyze)
+	3. 売買発注(signal)
+	4. インターフェース(ui)
 
-#データ収集
+#データ収集(collect)
 
 データ収集の機能はcollectにまとまっています。
 経済指標は、Yahoo Financeのhtmlをパーズして取得します。
@@ -17,8 +17,8 @@ Twilight Traderは、各種金融商品(FX,CFD,現物,信用)の自動売買に�
 ##インストール
 下記のツールに依存しています。適時インストールを行ってください。
 
-python3 : PyV8
-node : socket-client
+	python3 : PyV8
+	node : socket-client
 
 ##経済指標を取得する
 
@@ -84,7 +84,7 @@ cpi = http://info.finance.yahoo.co.jp/fx/marketcalendar/detail/9051
 }
 ```
 
-2.collect/node/investing/investing_websocket.jsを実行する
+2.collect/node/investing/investing_websocket.jsを実行する。
 
 すると、db/[date]/[商品名].csvで保存される。
 
