@@ -1,13 +1,56 @@
 var SockJS = require('sockjs-client');
+var env = process.env
+var fs = require("fs");
 require('date-utils');
 
-// Create a connection to http://localhost:9999/echo
-var stream = "stream20.forexpros.com"
-var TimeZoneID = 29;
+// load config
+load_config = function(){
+	var config = require(env["TT_HOME"] + '/config/investing.json');
+	return config;
+}
 
-console.log('stream: ' + stream);
+// get time
+function getUTCTime(timestamp, timezoneOffset) {
+	var dt = new Date((timestamp + timezoneOffset) * 1000);
+	var formatted = dt.toFormat("YYYYMMDD");
+	return formatted;
+}
+
+// get time
+function getCurrentDate() {
+	var dt = new Date();
+	var formatted = dt.toFormat("YYYYMMDDHH24MISS");
+	return formatted;
+}
+
+function getCurrentHour() {
+	var dt = new Date();
+	// for test : MI
+	var formatted = dt.toFormat("HH24");
+	return formatted;
+}
+
+function ensureDirectoryExistence(dirname) {
+  if (fs.existsSync(dirname)) {
+    return true;
+  }
+  fs.mkdirSync(dirname);
+  logger("mkdir: " + dirname);
+}
+
+// log function
+logger = function(text) {
+  fs.appendFile(env["TT_HOME"] + "/log/investing.log", getCurrentDate() + ":investing:"+ text + "\n");
+}
+
+
 var sock = null;
-new_conn = function(pid_to_name, pid_arr, insert, logger) {
+var hour = getCurrentHour();
+new_conn = function() {
+	logger("new connection started.")
+	config = load_config();
+	logger(JSON.stringify(config));
+	
 	var options = {
 		protocols_whitelist: ['websocket', 'xdr-streaming', 'xhr-streaming', 'iframe-eventsource', 'xdr-polling', 'xhr-polling'],
 		debug: true,
@@ -15,14 +58,16 @@ new_conn = function(pid_to_name, pid_arr, insert, logger) {
 		server_heartbeat_interval: 4000,
 		heartbeatTimeout: 2000
 	};
-	var url = 'http://' + stream + ':80/echo'
+	
+	var url = config["url"];
+	var TimeZoneID = config["TimeZoneID"];
+	var contents = config["contents"];
 	sock = new SockJS(url, null, options);
-	logger(url)
-
 	var heartbeat;
 
 	// all users announce their info to the server and start a heartbeat
 	var setHeartbeat = function() {
+		logger("heartbeat.");
 		clearTimeout(heartbeat);
 		heartbeat = setTimeout(function() {
 			sock.send(JSON.stringify({
@@ -33,36 +78,41 @@ new_conn = function(pid_to_name, pid_arr, insert, logger) {
 	};
 
 	sock.onopen = function() {
+		logger("socket onopen.");
 		setHeartbeat();
-		for (i=0; i<pid_arr.length; i++)
+		for (var pid in contents)
 		{
-			sock.send(JSON.stringify({
-				_event: "subscribe",
-				"tzID": TimeZoneID,
-				"message": pid_arr[i]
-			}));
+			params = contents[pid]["param"];
+			for(var id in params){
+				logger(params[id]);
+				sock.send(JSON.stringify({
+					_event: "subscribe",
+					"tzID": TimeZoneID,
+					"message": params[id]
+				}));
+			}
 		}
 	};
-	// Open the connection END
-
-	function getUTCTime(timestamp, timezoneOffset) {
-		var dt = new Date((timestamp + timezoneOffset) * 1000);
-		var formatted = dt.toFormat("YYYYMMDD");
-		return formatted;
-	}
 
 	// On receive message from server
 	sock.onmessage = function(e) {
 		// Get the content
-		var data = ""
-		logger(e.data)
+		logger(e.data);
 		try {
-			//console.log(e.data);
-			data = JSON.parse(e.data);
+			var data = JSON.parse(e.data);
 			var result = data.message.split('::');
 			var pid_obj = JSON.parse(result[1]);
-			date = getUTCTime(pid_obj["timestamp"],32400);
-			insert(date,pid_obj);
+			var date = getUTCTime(pid_obj["timestamp"],32400);
+			
+			csv = pid_obj["timestamp"]+","+pid_obj["bid"]+","+ pid_obj["ask"];
+			var dirname = env["TT_HOME"] + "/db/" + date;
+
+			var filename =  dirname + "/" + contents[pid_obj["pid"]]["name"] + ".csv";
+			ensureDirectoryExistence(dirname);
+ 			fs.appendFile(filename, csv + "\n");
+ 			
+ 			logger(filename);
+ 			logger(csv);
 		} catch (err) {
 			try{
 				// heartbeat
@@ -72,22 +122,26 @@ new_conn = function(pid_to_name, pid_arr, insert, logger) {
 				//console.log('CATCH ERR ' + err.message + e.data);
 				logger(err.message)
 				sock.close();
-				new_conn();
 			}
 		}
-		setHeartbeat();
+		prev_hour = hour;
+		hour = getCurrentHour();
+		if(prev_hour != hour){
+			logger("collection changed time.")
+			sock.close();
+		}
 	};
 	// On receive message from server END
 
 	// On connection close
 	sock.onclose = function() {
-			logger('close-fx');
+			logger('socket on close');
 			setTimeout(function() {
 				new_conn();
 			}, 300);
-
 		}
 		// On connection close END
-
 	setHeartbeat();
 }
+
+new_conn();
