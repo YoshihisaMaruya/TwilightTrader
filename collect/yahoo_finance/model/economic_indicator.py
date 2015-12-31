@@ -4,15 +4,20 @@ __date__ = "2015-12-28"
 __version__ = "0.1"
 
 import os
-from net.asserter.common.util import Log
-from net.asserter.model.common import DB
+from common.util import Log
+from model.common import DB
 from datetime import datetime
 
-db_filename = os.getenv('TT_HOME') + '/db/economic_indicator.db'
+db_dir = os.getenv('TT_HOME') + '/db/economic_indicator'
 
 class EconomicIndicatorDatabase:
     @staticmethod
+    def db_filename(economic_indicator):
+        return  db_dir + "/" + economic_indicator + ".db"
+
+    @staticmethod
     def create_table(economic_indicator):
+        db_filename = EconomicIndicatorDatabase.db_filename(economic_indicator)
         schema = """create table {economic_indicator} (
                  date         int primary key not null,
                  expect       text,
@@ -22,7 +27,7 @@ class EconomicIndicatorDatabase:
 
     @staticmethod
     def insert(economic_indicator, data):
-
+        db_filename = EconomicIndicatorDatabase.db_filename(economic_indicator)
         def func(connect):
             for date, value in data.items():
                 sql_cmd = """

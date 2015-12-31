@@ -6,14 +6,12 @@ __version__ = "0.1"
 import PyV8
 import urllib.request
 import re
-from net.asserter.common.util import Log, IO
-from net.asserter.model.economic_indicator import EconomicIndicatorDatabase
+from common.util import Log, IO
+from model.economic_indicator import EconomicIndicatorDatabase
 
 # Yahoo Financeから情報を取得する
 # TODO : 1. 一つのページに２つの情報がある場合(Ex. 雇用統計と失業保険), 2. expectAllの2013/9/1が２つある場合(Ex. 小売売上高)
 class YahooFinance:
-    tag = "yahoo_finance"
-
     # ページをパーズし、経済指標データを取得
     @staticmethod
     def __parse_page(page):
@@ -47,32 +45,17 @@ class YahooFinance:
             return result
 
     @staticmethod
-    def insert(key, create):
-        url = IO.read_config(YahooFinance.tag, key)
+    def create(key,url):
+        EconomicIndicatorDatabase.create_table(key)
+        result = YahooFinance.update(key,url)
+        return result
+
+    @staticmethod
+    def update(key,url):
+        Log.info("key: " + key)
         Log.info("access_to: " + url)
         result = YahooFinance.__get(url)
-        if create:
-            EconomicIndicatorDatabase.create_table(key)
         EconomicIndicatorDatabase.insert(key,result)
         return result
 
-    # 雇用統計
-    @staticmethod
-    def cec(create=False):
-        key = "cec"
-        result = YahooFinance.insert(key,create)
-        return result
-
-    # CPI
-    @staticmethod
-    def cpi(create=False):
-        key = "cpi"
-        result = YahooFinance.insert(key,create)
-        return result
-
-    # 小売売上高
-    @staticmethod
-    def retail_sales(create=False):
-        key = "retail_sales"
-        result = YahooFinance.insert(key,create)
-        return result
+        

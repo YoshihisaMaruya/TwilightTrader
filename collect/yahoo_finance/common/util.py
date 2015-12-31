@@ -9,10 +9,9 @@ import logging
 import os
 import inspect
 
-logging.basicConfig(filename=os.getenv('TT_HOME') + '/log/twilight_trader.log', level=logging.INFO, format='%(asctime)s %(message)s',
+logging.basicConfig(filename=os.getenv('TT_HOME') + '/log/yahoo_finance.log', level=logging.INFO, format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p')
-economic_indicators_path = os.getenv('TT_HOME') + '/data/economic_indicator'
-common_config_path = os.getenv('TT_HOME') + '/config/common.ini'
+common_config_path = os.getenv('TT_HOME') + '/config/yahoo_finance.ini'
 
 class Log:
     @staticmethod
@@ -36,12 +35,16 @@ class Log:
 class IO:
     @staticmethod
     def read_config(key1, key2):
-        Log.info("load config from: " + common_config_path)
         Log.info("key1, key2: " + key1 + "," + key2)
-        config = configparser.ConfigParser()
-        config.read(common_config_path)
+        config = read_config_all()
         return config[key1][key2]
 
+    @staticmethod
+    def read_config_all():
+        Log.info("load config from: " + common_config_path)
+        config = configparser.ConfigParser()
+        config.read(common_config_path)
+        return config
 
 class Datetime:
     @staticmethod

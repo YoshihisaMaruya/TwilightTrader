@@ -2,7 +2,7 @@ __author__ = 'rv'
 
 import os
 import sqlite3
-from net.asserter.common.util import Log
+from common.util import Log
 
 class DB:
     @staticmethod
