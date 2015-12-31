@@ -5,7 +5,8 @@ require('date-utils');
 
 // load config
 load_config = function(){
-	var config = require(env["TT_HOME"] + '/config/investing.json');
+//	var config = require(env["TT_HOME"] + '/config/investing.json');
+	var config = JSON.parse(fs.readFileSync(env["TT_HOME"] + '/config/investing.json', 'utf8'));
 	return config;
 }
 
@@ -32,6 +33,7 @@ function getCurrentDatetime() {
 function getCurrentHour() {
 	var dt = new Date();
 	// for test : MI
+	// HH24
 	var formatted = dt.toFormat("HH24");
 	return formatted;
 }

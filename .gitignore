@@ -3,4 +3,5 @@ build/
 .idea
 db/
 log/
+collect/scripts/pid.txt
 config/private.ini

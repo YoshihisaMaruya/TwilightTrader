@@ -3,27 +3,67 @@
   "TimeZoneID" : 29,
   "contents" : {
     "1": {
-    "name" : "eurusd",
+    "name" : "eur_usd",
     "param": [
       "pid-1:",
       "isOpenExch-1002:",
       "isOpenExch-1:"
     ]
     },
+    "2" : {
+      "name" : "gbp_usd",
+      "param" : [
+      "pid-2:",
+      "isOpenExch-1002:",
+      "isOpenExch-2:"
+      ]
+    },
     "3": {
-      "name" : "usdjpy",
+      "name" : "usd_jpy",
       "param": [
           "pid-3:",
           "isOpenExch-1002:", 
           "isOpenExch-3:"
       ]
     },
+    "5":{
+      "name" : "aud_usd",
+      "param" : [
+        "pid-5:",
+        "isOpenExch-1002:",
+        "isOpenExch-5:"  
+      ]
+    },
     "9": {
-      "name" : "eurjpy",
+      "name" : "eur_jpy",
       "param": [
           "pid-9:", 
           "isOpenExch-1002:", 
           "isOpenExch-9:"
+      ]
+    },
+    "17": {
+      "name": "usd_zar",
+      "param": [
+        "pid-17:",
+        "isOpenExch-1002:",
+        "isOpenExch-17:"
+      ]
+    },
+    "49": {
+      "name": "aud_jpy",
+      "param": [
+      "pid-5:",
+      "isOpenExch-1002:",
+      "isOpenExch-5:"
+      ]
+    },
+    "78": {
+     "name": "zar_jpy",
+     "param": [
+      "pid-78:",
+      "isOpenExch-1002:",
+      "isOpenExch-78:" 
       ]
     },
     "8849": {
@@ -32,6 +72,13 @@
           "pid-8849:",
           "isOpenPair-8849:" 
       ]
+    },
+    "8859": {
+      "name": "japan225futures",
+      "param" : [
+        "pid-8859:",
+        "isOpenPair-8859:"
+        ]
     }
   }
 }
