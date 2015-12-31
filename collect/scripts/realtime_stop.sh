@@ -1,5 +1,5 @@
 
-TESTFILE=./pid.txt
+TESTFILE=${TT_HOME}/collect/scripts/pid.txt
 
 i=0
 while read line; do
